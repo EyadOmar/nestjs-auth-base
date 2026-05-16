@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { config as loadEnv } from 'dotenv';
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { join } from 'node:path';
 
 loadEnv();
@@ -8,7 +8,7 @@ const isCompiled = __filename.endsWith('.js');
 const ext = isCompiled ? 'js' : 'ts';
 const rootDir = isCompiled ? join(__dirname, '..') : join(__dirname, '..');
 
-export const AppDataSource = new DataSource({
+export const datasourceOptions: DataSourceOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL,
   ssl:
@@ -21,6 +21,8 @@ export const AppDataSource = new DataSource({
     process.env.NODE_ENV === 'development'
       ? ['error', 'warn', 'schema']
       : ['error'],
-});
+};
+
+const AppDataSource = new DataSource(datasourceOptions);
 
 export default AppDataSource;
